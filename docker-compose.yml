@@ -1,0 +1,30 @@
+services:
+  docker-apache2:
+    container_name: docker-wireguard
+    cap_add:
+      - NET_ADMIN
+    build:
+      context: .
+      args:
+        SSH_USER: "$SSH_USER"
+        SSH_PASSWORD: "$SSH_PASSWORD"
+        ROOT_PASSWORD: "$ROOT_PASSWORD"
+      dockerfile: Dockerfile
+    image: docker-wireguard:latest
+    tty: true
+    ports:
+      - 2224:22
+      - 51820:51820/udp
+    networks:
+      - docker-wireguard-network
+    volumes:
+      - type: bind
+        source: ./storage
+        target: /app/storage
+
+networks:
+  docker-wireguard-network:
+    driver: bridge
+
+volumes:
+  storage:
